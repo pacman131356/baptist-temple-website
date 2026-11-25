@@ -405,3 +405,30 @@ p{margin:0 0 1em;text-wrap:pretty}
   .hero-times div:nth-child(3){display:none}
   .hero .eyebrow{font-size:.66rem;letter-spacing:.16em}
 }
+
+/* ---------- Ministries: grouped numbered list ---------- */
+.m-group{display:grid;grid-template-columns:minmax(220px,.8fr) 2fr;gap:clamp(28px,6vw,90px);align-items:start}
+.m-group+.m-group{margin-top:clamp(70px,9vw,120px)}
+.m-side{position:sticky;top:120px}
+.m-side h2{font-size:clamp(2rem,3.6vw,3rem);margin:16px 0 14px}
+.m-side h2 em{font-family:var(--serif);font-style:italic;font-weight:400;font-stretch:100%;color:var(--blue)}
+.m-side p{color:var(--muted);margin:0;max-width:26ch}
+.m-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.m-row{position:relative;display:grid;grid-template-columns:56px minmax(180px,1fr) 1.5fr;gap:12px 28px;padding:30px 18px 30px 0;border-bottom:1px solid var(--line);transition:padding .45s var(--ease)}
+.m-row::before{content:"";position:absolute;inset:-1px 0 -1px -18px;background:var(--mist);border-radius:18px;opacity:0;transform:scaleX(.96);transform-origin:left;transition:opacity .35s,transform .45s var(--ease);z-index:-1}
+.m-row:hover{padding-left:14px}
+.m-row:hover::before{opacity:1;transform:none}
+.m-num{font:800 .9rem/1.9 var(--display);font-stretch:112%;color:var(--blue);letter-spacing:.04em;transition:color .3s}
+.m-row:hover .m-num{color:var(--amber)}
+.m-head h3{font-size:1.45rem;line-height:1.1}
+.m-when{display:flex;align-items:center;gap:8px;margin-top:10px;font:700 .7rem/1.3 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--blue-deep)}
+.m-when::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amber);flex:none}
+.m-row p{margin:0;color:var(--muted);font-size:1.02rem;line-height:1.6}
+@media (max-width:900px){
+  .m-group{grid-template-columns:1fr;gap:24px}
+  .m-side{position:static}
+  .m-row{grid-template-columns:42px 1fr;padding:24px 0}
+  .m-row p{grid-column:2}
+  .m-row:hover{padding-left:0}
+  .m-row::before{display:none}
+}

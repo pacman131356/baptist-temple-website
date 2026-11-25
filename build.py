@@ -516,24 +516,40 @@ page("/sunday-school/", "Sunday School · Baptist Temple, Connersville",
 </section>''' + TRIO)
 
 # ---------------------------------------------------------------- MINISTRIES
-MIN = [
- ("Worship", "", "Biblically centered, Christ-honoring music in a blended style of contemporary and traditional songs."),
+MIN_GROW = [
+ ("Worship", "Sundays, 10:30 AM", "Biblically centered, Christ-honoring music in a blended style of contemporary and traditional songs."),
  ("Joshua's Men", "Saturdays, 7 AM", "A men's discipleship group with a verse-by-verse Bible study, building godly men who lead their families and church."),
  ("Women's Ministry", "", "Connecting women to Jesus and to one another through conferences, crafting, Bible studies, and fellowship and service events. All women are welcome."),
  ("Senior Adults", "", "Events and activities for senior adults. Check the bulletin or call the church office for what's coming up."),
  ("Sonshiner's", "Sundays, 10:30 AM · Room 113", "A class for adults with special needs: Bible verses, trivia with prizes, prayer, singing, and refreshments. Anyone is welcome to join."),
+]
+MIN_SERVE = [
  ("Community Outreach", "", "A food pantry (bring donations to the church office), Friends of the Lord's Table serving meals two Monday nights a month, and Mats for the Homeless on Tuesdays and Thursdays at 1 PM, January through April."),
  ("International Missions", "", "Spreading the gospel locally and around the world and supporting missionary families. See the weekly Missionary Spotlight in the bulletin."),
  ("Video &amp; Live Streaming", "Every Sunday", "Our T3 team streams worship each week so people who can't be there in person can still worship and study with us."),
  ("Bus &amp; Van Ministry", "Call to schedule", "Need a ride to church? Call the office and we'll arrange a pickup."),
 ]
-mcards = "".join(f'<div class="card reveal">{f"<span class=when>{w}</span>" if w else ""}<h3>{t}</h3><p>{d}</p></div>' for t, w, d in MIN)
+def mrows(items, start):
+    out = []
+    for i, (t, w, d) in enumerate(items, start):
+        meta = f'<span class="m-when">{w}</span>' if w else ''
+        out.append(f'<li class="m-row reveal"><span class="m-num">{i:02d}</span><div class="m-head"><h3>{t}</h3>{meta}</div><p>{d}</p></li>')
+    return "".join(out)
 page("/ministries/", "Ministries · Baptist Temple, Connersville",
  "Adult ministries and community outreach at Baptist Temple: men's and women's ministries, senior adults, Sonshiner's, missions, and more.",
  page_hero("Adults &amp; outreach", "Find your people. <em>Serve your neighbors.</em>",
   "There's a place for you to grow and serve at Baptist Temple. For details, call the church office or check the weekly bulletin.", IMG["adults"]) + f'''
 <section class="section">
-  <div class="wrap"><div class="cards stagger">{mcards}</div></div>
+  <div class="wrap">
+    <div class="m-group">
+      <div class="m-side"><span class="eyebrow">For adults</span><h2>Grow <em>together.</em></h2><p>Groups and classes for every season of life.</p></div>
+      <ol class="m-list">{mrows(MIN_GROW, 1)}</ol>
+    </div>
+    <div class="m-group">
+      <div class="m-side"><span class="eyebrow">Outreach</span><h2>Reach <em>out.</em></h2><p>Ways we care for Connersville and the world.</p></div>
+      <ol class="m-list">{mrows(MIN_SERVE, len(MIN_GROW)+1)}</ol>
+    </div>
+  </div>
 </section>
 <section class="section mist">
   <div class="wrap split">
