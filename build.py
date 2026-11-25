@@ -70,7 +70,7 @@ def header(current):
 <div class="ribbon">Concept preview prepared by <a href="https://holdencreative.co">Holden Creative</a>. Not the official Baptist Temple website.</div>
 <header class="nav" id="nav">
   <div class="nav-row">
-    <a class="nav-brand" href="/" aria-label="Baptist Temple home"><span class="mark" style="background-image:url('{IMG["logo"]}')"></span><span class="word wordtext">Baptist Temple<small>Connersville</small></span></a>
+    <a class="nav-brand" href="/" aria-label="Baptist Temple home"><img class="mark" src="/img/bt-mark.png" alt="" width="46" height="46"><span class="word wordtext">Baptist Temple<small>Connersville</small></span></a>
     <nav class="nav-menu" aria-label="Main">{"".join(items)}</nav>
     <div class="nav-end"><a class="nav-give" href="{GIVE}">Give</a><a class="btn btn-amber" href="/plan-a-visit/">Plan a Visit</a><button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button></div>
   </div>
@@ -140,7 +140,9 @@ def page(path, title, desc, body, current=None):
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{html.escape(desc)}">
 <meta property="og:image" content="{IMG["aerial"]}">
-<link rel="icon" href="{IMG["mark"]}">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,600..900&family=Fraunces:ital,opsz,wght@1,9..144,400..500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
