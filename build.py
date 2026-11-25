@@ -70,7 +70,7 @@ def header(current):
 <div class="ribbon">Concept preview prepared by <a href="https://holdencreative.co">Holden Creative</a>. Not the official Baptist Temple website.</div>
 <header class="nav" id="nav">
   <div class="nav-row">
-    <a class="nav-brand" href="/" aria-label="Baptist Temple home"><img class="mark" src="{IMG["mark"]}" alt="" width="46" height="46"><span class="word wordtext">Baptist Temple<small>Connersville</small></span></a>
+    <a class="nav-brand" href="/" aria-label="Baptist Temple home"><span class="mark" style="background-image:url('{IMG["logo"]}')"></span><span class="word wordtext">Baptist Temple<small>Connersville</small></span></a>
     <nav class="nav-menu" aria-label="Main">{"".join(items)}</nav>
     <div class="nav-end"><a class="nav-give" href="{GIVE}">Give</a><a class="btn btn-amber" href="/plan-a-visit/">Plan a Visit</a><button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button></div>
   </div>
