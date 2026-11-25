@@ -1,0 +1,27 @@
+# Baptist Temple concept preview (static HTML, no build step)
+[build]
+  publish = "."
+
+# Keep previews out of search engines
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+# Old Squarespace addresses still work
+[[redirects]]
+  from = "/about-us"
+  to = "/about/"
+  status = 301
+[[redirects]]
+  from = "/beliefs"
+  to = "/about/#beliefs"
+  status = 301
+[[redirects]]
+  from = "/plan"
+  to = "/plan-a-visit/"
+  status = 301
+[[redirects]]
+  from = "/other-ministries"
+  to = "/ministries/"
+  status = 301
