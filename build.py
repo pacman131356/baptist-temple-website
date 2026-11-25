@@ -10,6 +10,7 @@ IMG = {
     "logo": CDN + "d2fd2b12-c2a1-4f72-b96d-07d4c56fd907/Baptist+Temple.png?format=750w",
     "mark": img("af8a34e6-af14-48a3-8293-bb2dea45f3d1/BT.png", 300),
     "worship": img("e378b8b1-31d3-4c08-afa0-35310423bd89/IMG_6968.jpg", 1500),
+    "worship_wide": img("e378b8b1-31d3-4c08-afa0-35310423bd89/IMG_6968.jpg", 2500),
     "preach": img("cd1e4a0b-e41f-4de5-9050-74a3e52968cd/IMG_7106.jpg", 2500),
     "lectern": img("6e0050a5-a156-40ac-9248-0c06280ac3d4/IMG_6993.jpg"),
     "aerial": img("bd5d86e3-f96b-4fd8-9ca3-9ea1f11c6f39/491735833_980411590846482_4012375894134007581_n+%281%29.jpg", 2500),
@@ -55,35 +56,39 @@ NAV = [
 ]
 
 def header(current):
-    items = []
+    items, mob = [], []
     for i, (label, target) in enumerate(NAV):
         if isinstance(target, list):
             links = "".join(f'<a href="{h}">{t}</a>' for t, h in target)
             items.append(f'<div class="nav-group"><button type="button" aria-expanded="false" aria-controls="m{i}">{label} {ICON["chev"]}</button><div class="menu" id="m{i}" hidden>{links}</div></div>')
+            mob.append(f'<details><summary>{label}</summary>{links}</details>')
         else:
-            cur = ' aria-current="page"' if target == current else ""
-            items.append(f'<a href="{target}"{cur}>{label}</a>')
-    return f'''<a class="skip" href="#main">Skip to content</a>
+            items.append(f'<a href="{target}">{label}</a>')
+            mob.append(f'<a href="{target}">{label}</a>')
+    mob.append(f'<a href="{GIVE}">Give</a>')
+    return f"""<a class="skip" href="#main">Skip to content</a>
 <div class="ribbon">Concept preview prepared by <a href="https://holdencreative.co">Holden Creative</a>. Not the official Baptist Temple website.</div>
-<header class="site-head">
-  <div class="wrap head-bar">
-    <a class="brand" href="/" aria-label="Connersville Baptist Temple, home"><img src="{IMG["logo"]}" alt="Connersville Baptist Temple" width="240" height="46"></a>
-    <nav class="nav" aria-label="Main">{"".join(items)}</nav>
-    <div class="head-actions">
-      <div class="social"><a href="{FB}" aria-label="Facebook">{ICON["fb"]}</a><a href="{YT}" aria-label="YouTube">{ICON["yt"]}</a></div>
-      <a class="btn btn-blue" href="{GIVE}">Give</a>
-      <button class="burger" type="button" aria-label="Menu" aria-expanded="false">{ICON["menu"]}</button>
-    </div>
+<header class="nav" id="nav">
+  <div class="nav-row">
+    <a class="nav-brand" href="/" aria-label="Baptist Temple home"><img class="mark" src="{IMG["mark"]}" alt="" width="46" height="46"><span class="word wordtext">Baptist Temple<small>Connersville</small></span></a>
+    <nav class="nav-menu" aria-label="Main">{"".join(items)}</nav>
+    <div class="nav-end"><a class="nav-give" href="{GIVE}">Give</a><a class="btn btn-amber" href="/plan-a-visit/">Plan a Visit</a><button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button></div>
   </div>
-</header>'''
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile">{"".join(mob)}</nav>
+</header>"""
 
-FOOTER = f'''<footer class="site-foot">
+FOOTER = f"""<footer class="site-foot">
   <div class="wrap">
+    <div class="foot-cta reveal">
+      <h2>There's a seat saved <em>for you</em> this Sunday.</h2>
+      <div class="btns"><a class="btn btn-amber" href="/plan-a-visit/">Plan a Visit {ICON["arrow"]}</a><a class="btn btn-ghost" href="/watch/">{ICON["play"]} Watch Live</a></div>
+    </div>
     <div class="foot-grid">
       <div class="foot-times">
-        <img src="{IMG["logo"]}" alt="Connersville Baptist Temple" width="260" height="50" loading="lazy">
-        <strong>Sundays<br>9:30 &amp; 10:30 AM</strong>
+        <img src="{IMG["logo"]}" alt="Connersville Baptist Temple" width="240" height="44" loading="lazy">
+        <strong>Sundays 9:30 &amp; 10:30</strong>
         <p>Sunday School at 9:30, Worship at 10:30.<br>On campus and online.</p>
+        <div class="social"><a href="{FB}" aria-label="Facebook">{ICON["fb"]}</a><a href="{YT}" aria-label="YouTube">{ICON["yt"]}</a></div>
       </div>
       <div>
         <h4>Visit</h4>
@@ -114,12 +119,13 @@ FOOTER = f'''<footer class="site-foot">
         </ul>
       </div>
     </div>
+    <div class="big-word" aria-hidden="true">Baptist Temple</div>
     <div class="foot-bottom">
       <span>&copy; <span id="yr">2026</span> Connersville Baptist Temple</span>
-      <span><a href="{FB}">Facebook</a> &middot; <a href="{YT}">YouTube</a> &middot; Concept preview by <a href="https://holdencreative.co">Holden Creative</a></span>
+      <span>Concept preview by <a href="https://holdencreative.co">Holden Creative</a></span>
     </div>
   </div>
-</footer>'''
+</footer>"""
 
 def page(path, title, desc, body, current=None):
     doc = f'''<!DOCTYPE html>
@@ -130,14 +136,14 @@ def page(path, title, desc, body, current=None):
 <title>{title}</title>
 <meta name="description" content="{html.escape(desc)}">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#0b0c0e">
+<meta name="theme-color" content="#0c1621">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{html.escape(desc)}">
 <meta property="og:image" content="{IMG["aerial"]}">
 <link rel="icon" href="{IMG["mark"]}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,600..900&family=Fraunces:ital,opsz,wght@1,9..144,400..500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://images.squarespace-cdn.com">
 <link rel="stylesheet" href="/styles.css">
 </head>
@@ -165,80 +171,74 @@ def page_hero(eyebrow, h1, lede, bg, pos="center"):
   </div>
 </section>'''
 
-TRIO = f'''<section class="section">
+TRIO = f"""<section class="section mist">
   <div class="wrap">
-    <div class="trio reveal">
-      <a href="/prayer/"><h3>Prayer Request</h3><p>Share what's on your heart. Our team would be honored to pray with you.</p><span>Send a request {ICON["arrow"]}</span></a>
-      <a href="/plan-a-visit/"><h3>Plan a Visit</h3><p>Know what to expect before you pull in on Sunday morning.</p><span>Start here {ICON["arrow"]}</span></a>
-      <a href="/connect/"><h3>Get Connected</h3><p>Joined us in person or online? Let us know and we'll be in touch.</p><span>Fill out a card {ICON["arrow"]}</span></a>
+    <div class="trio stagger">
+      <a class="reveal" href="/prayer/"><h3>Prayer Request</h3><p>Share what's on your heart. Our team would be honored to pray with you.</p><span>Send a request {ICON["arrow"]}</span></a>
+      <a class="reveal" href="/plan-a-visit/"><h3>Plan a Visit</h3><p>Know what to expect before you pull in on Sunday morning.</p><span>Start here {ICON["arrow"]}</span></a>
+      <a class="reveal" href="/connect/"><h3>Get Connected</h3><p>Joined us in person or online? Let us know and we'll be in touch.</p><span>Fill out a card {ICON["arrow"]}</span></a>
     </div>
   </div>
-</section>'''
+</section>"""
 
 # ---------------------------------------------------------------- HOME
+MARQ = "".join(f'<span>{t}<b></b></span>' for t in ["Sunday School <em>9:30</em>", "Worship <em>10:30</em>", "Coffee &amp; donuts from <em>9:00</em>", "On campus <em>&amp;</em> online", "Everyone is <em>welcome</em>", "Connersville, Indiana"])
 page("/", "Baptist Temple · Connersville, Indiana · Sundays 9:30 & 10:30",
  "Connersville Baptist Temple: a ministry for the whole family. Sunday School at 9:30 AM and Worship at 10:30 AM, on campus and online at 1380 IN-44, Connersville, IN.",
- f'''<section class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <span class="eyebrow">Connersville, Indiana</span>
-      <h1>A ministry for the <span>whole family.</span></h1>
-      <p class="lede">Everyone is welcome at Baptist Temple. Join us this Sunday on campus or online. We'd love to meet you.</p>
-      <div class="btns">
-        <a class="btn btn-blue" href="/plan-a-visit/">Plan a Visit {ICON["arrow"]}</a>
-        <a class="btn btn-ghost" href="/watch/">{ICON["play"]} Watch Live</a>
-      </div>
-      <div class="hero-meta"><span><b>Sunday School</b> 9:30 AM</span><span><b>Worship</b> 10:30 AM</span><span><b>Online</b> Facebook &amp; YouTube</span></div>
-    </div>
-    <div class="hero-photo">
-      <img src="{IMG["worship"]}" alt="Worship team leading a Sunday service at Baptist Temple, with a guitarist and singers on stage" width="750" height="1000" fetchpriority="high">
-      <div class="hero-card"><img src="{IMG["mark"]}" alt="" width="46" height="46"><div><strong>This Sunday</strong><span>Free coffee &amp; donuts from 9:00</span></div></div>
+ f"""<section class="hero">
+  <div class="hero-bg"><img src="{IMG["worship_wide"]}" alt="" fetchpriority="high"></div>
+  <div class="wrap hero-inner">
+    <span class="eyebrow" style="color:var(--sky);animation:fade 1s both">Baptist Temple · Connersville, Indiana</span>
+    <h1 style="margin-top:22px"><span class="line"><span>A ministry for</span></span><span class="line"><span><span class="rotator" aria-label="the whole family"><span class="on" aria-hidden="true">the whole family.</span><span aria-hidden="true">your kids.</span><span aria-hidden="true">your teens.</span><span aria-hidden="true">every age.</span><span aria-hidden="true">you.</span></span></span></span></h1>
+    <p class="hero-sub">Everyone is welcome here. Join us this Sunday on campus off State Road 44, or worship with us online wherever you are.</p>
+    <div class="btns"><a class="btn btn-amber" href="/plan-a-visit/">Plan Your Visit {ICON["arrow"]}</a><a class="btn btn-ghost" href="/watch/">{ICON["play"]} Watch Live</a></div>
+    <div class="hero-foot">
+      <div class="hero-times"><div>Sunday School<strong>9:30 AM</strong></div><div>Worship<strong>10:30 AM</strong></div><div>Online<strong>Facebook &amp; YouTube</strong></div></div>
+      <a class="scroll-cue" href="#sundays"><i></i>Scroll</a>
     </div>
   </div>
 </section>
+<div class="marquee" aria-hidden="true"><div class="marquee-track">{MARQ}{MARQ}</div></div>
 
-<section>
+<section class="section" id="sundays">
   <div class="wrap">
-    <div class="times">
-      <div class="time reveal"><span class="label">9:30 AM</span><strong>Sunday School</strong><p>Classes for every age, from nursery to adults, all across campus.</p></div>
-      <div class="time reveal"><span class="label">10:30 AM</span><strong>Worship</strong><p>Blended worship and Bible-centered preaching. About an hour.</p></div>
-      <div class="time reveal"><span class="label">9:00 to 10:30 AM</span><strong>Coffee &amp; Donuts</strong><p>Free in the café. Stop by the Welcome Center and say hi.</p></div>
+    <div class="section-head reveal"><div><span class="eyebrow">Your first Sunday</span><h2>Here's how a Sunday <em>morning</em> flows.</h2></div><a class="btn btn-line" href="/plan-a-visit/">What to expect {ICON["arrow"]}</a></div>
+    <div class="timeline">
+      <div class="stop"><div class="t">9:00<small>AM</small></div><h3>Coffee &amp; donuts</h3><p>Free in the café until 10:30. Stop by the Welcome Center and say hi.</p></div>
+      <div class="stop"><div class="t">9:30<small>AM</small></div><h3>Sunday School</h3><p>Classes for every age, from the nursery to adults, all across campus.</p></div>
+      <div class="stop"><div class="t">10:30<small>AM</small></div><h3>Worship</h3><p>Blended worship and Bible-centered preaching, plus Kids Church. About an hour.</p></div>
     </div>
   </div>
 </section>
 
-<section class="section">
+<section class="section dark">
   <div class="wrap">
-    <div class="section-head reveal"><div><span class="eyebrow">Everyone is welcome</span><h2>Your first Sunday, in three easy steps.</h2></div></div>
-    <div class="steps">
-      <div class="step reveal"><h3>Pick a time</h3><p>Sunday School starts at 9:30 and worship at 10:30. Each lasts about an hour, on campus and online.</p></div>
-      <div class="step reveal"><h3>Invite a friend</h3><p>Church is more fun with a friend. Send a text or share an invite on social media.</p></div>
-      <div class="step reveal"><h3>Show up</h3><p>Wear what makes you comfortable and arrive a few minutes early. We'd love to meet you at the Welcome Center.</p></div>
-    </div>
+    <span class="eyebrow" style="color:var(--sky)">Everyone is welcome</span>
+    <p class="statement" style="margin-top:22px"><span data-words>No matter your age, your story, or where you've been, you have a</span> <em data-words>place here.</em> <span data-words>Come as you are. Wear what's comfortable. We'd love to meet you.</span></p>
   </div>
 </section>
 
-<section class="section paper">
+<section class="section mist">
   <div class="wrap">
     <div class="section-head reveal">
-      <div><span class="eyebrow">Something for everyone</span><h2>Ministry for every age and stage.</h2></div>
+      <div><span class="eyebrow">Something for everyone</span><h2>Ministry for every <em>age</em> and stage.</h2></div>
       <a class="btn btn-line" href="/ministries/">All ministries {ICON["arrow"]}</a>
     </div>
-    <div class="tiles">
-      <a class="tile reveal" href="/sunday-school/"><img src="{IMG["class"]}" alt="Adults taking notes during a Sunday School class" loading="lazy"><div class="tile-body"><small>Sundays 9:30</small><h3>Sunday School</h3><span>Learn more {ICON["arrow"]}</span></div></a>
-      <a class="tile reveal" href="/kids/"><img src="{IMG["kids"]}" alt="Temple Kids sign on the door of the kids' room" loading="lazy"><div class="tile-body"><small>Birth to 6th grade</small><h3>Kids</h3><span>Learn more {ICON["arrow"]}</span></div></a>
-      <a class="tile reveal" href="/students/"><img src="{IMG["students"]}" alt="A student playing air hockey in the youth room" loading="lazy"><div class="tile-body"><small>7th to 12th grade</small><h3>Students</h3><span>Learn more {ICON["arrow"]}</span></div></a>
-      <a class="tile reveal" href="/ministries/"><img src="{IMG["adults"]}" alt="Adults studying their Bibles together around a table" loading="lazy"><div class="tile-body"><small>Groups &amp; outreach</small><h3>Adults</h3><span>Learn more {ICON["arrow"]}</span></div></a>
+    <div class="bento">
+      <a class="tile" href="/sunday-school/"><img src="{IMG["class"]}" alt="Adults taking notes during a Sunday School class" loading="lazy"><div class="tile-body"><div><small>Sundays · 9:30</small><h3>Sunday School</h3></div><span class="go">{ICON["arrow"]}</span></div></a>
+      <a class="tile" href="/kids/"><img src="{IMG["kids"]}" alt="Temple Kids sign on the door of the kids' room" loading="lazy"><div class="tile-body"><div><small>Birth to 6th grade</small><h3>Kids</h3></div><span class="go">{ICON["arrow"]}</span></div></a>
+      <a class="tile" href="/students/"><img src="{IMG["students"]}" alt="A student playing air hockey in the youth room" loading="lazy"><div class="tile-body"><div><small>7th to 12th grade</small><h3>Students</h3></div><span class="go">{ICON["arrow"]}</span></div></a>
+      <a class="tile" href="/ministries/"><img src="{IMG["adults"]}" alt="Adults studying their Bibles together around a table" loading="lazy" style="object-position:center 40%"><div class="tile-body"><div><small>Groups, missions &amp; outreach</small><h3>Adults &amp; Outreach</h3></div><span class="go">{ICON["arrow"]}</span></div></a>
     </div>
   </div>
 </section>
 
 <section class="watch">
-  <img class="bg" src="{IMG["preach"]}" alt="" loading="lazy">
+  <div class="bg" data-parallax><img src="{IMG["preach"]}" alt="" loading="lazy"></div>
   <div class="wrap">
     <div class="watch-copy reveal">
-      <span class="eyebrow">Wherever you are</span>
-      <h2>Join us live every Sunday at 10:30.</h2>
+      <span class="live"><i></i>Live Sundays at 10:30</span>
+      <h2>Church that goes <em>wherever</em> you go.</h2>
       <p>Can't make it in person? Worship with us live on Facebook and YouTube, or catch up on past messages anytime.</p>
       <div class="btns"><a class="btn btn-white" href="/watch/">{ICON["play"]} Watch Live</a><a class="btn btn-ghost" href="{YT}">Past Messages</a></div>
     </div>
@@ -247,32 +247,38 @@ page("/", "Baptist Temple · Connersville, Indiana · Sundays 9:30 & 10:30",
 
 <section class="section">
   <div class="wrap">
+    <div class="section-head reveal"><div><span class="eyebrow">Plan your visit</span><h2>On the east side of <em>Connersville</em>.</h2></div></div>
     <div class="visit">
-      <div class="visit-photo reveal"><img src="{IMG["aerial"]}" alt="Aerial view of the Baptist Temple building and parking lot on State Road 44" loading="lazy"></div>
+      <div class="visit-photo reveal"><img src="{IMG["aerial"]}" alt="Aerial view of the Baptist Temple building and parking lot on State Road 44" loading="lazy"><span class="pin">{ICON["pin"]}Guest parking by the main entrance</span></div>
       <div class="visit-card reveal">
-        <span class="eyebrow" style="color:#7cc4ea">Join us</span>
-        <h2>We saved you a seat.</h2>
+        <h2>We saved you a <em>seat.</em></h2>
         <div class="info">
           <div>{ICON["clock"]}<span><small>Sundays</small>Sunday School 9:30 AM<br>Worship Service 10:30 AM</span></div>
           <div>{ICON["pin"]}<span><small>Address</small><a href="{MAPS}">1380 IN-44<br>Connersville, IN 47331</a></span></div>
           <div>{ICON["phone"]}<span><small>Phone</small><a href="tel:{PHONE_TEL}">{PHONE}</a></span></div>
           <div>{ICON["mail"]}<span><small>Email</small><a href="mailto:{EMAIL}">{EMAIL}</a></span></div>
         </div>
-        <div class="btns"><a class="btn btn-blue" href="/plan-a-visit/">Plan a Visit</a><a class="btn btn-ghost" href="{MAPS}">Get Directions</a></div>
+        <div class="btns"><a class="btn btn-amber" href="/plan-a-visit/">Plan a Visit</a><a class="btn btn-ghost" href="{MAPS}">Directions</a></div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section paper" style="padding-bottom:0">
-  <div class="wrap"><div class="section-head reveal"><div><span class="eyebrow">Many members, one body</span><h2>Take your next step.</h2></div></div></div>
-</section>
-<div class="paper" style="background:var(--paper)">{TRIO}</div>''')
+<section class="section mist">
+  <div class="wrap">
+    <div class="section-head reveal"><div><span class="eyebrow">Many members, one body</span><h2>Take your next <em>step.</em></h2></div></div>
+    <div class="trio stagger">
+      <a class="reveal" href="/prayer/"><h3>Prayer Request</h3><p>Share what's on your heart. Our team would be honored to pray with you.</p><span>Send a request {ICON["arrow"]}</span></a>
+      <a class="reveal" href="/plan-a-visit/"><h3>Plan a Visit</h3><p>Know what to expect before you pull in on Sunday morning.</p><span>Start here {ICON["arrow"]}</span></a>
+      <a class="reveal" href="/connect/"><h3>Get Connected</h3><p>Joined us in person or online? Let us know and we'll be in touch.</p><span>Fill out a card {ICON["arrow"]}</span></a>
+    </div>
+  </div>
+</section>""")
 
 # ---------------------------------------------------------------- PLAN A VISIT
 page("/plan-a-visit/", "Plan a Visit · Baptist Temple, Connersville",
  "What to expect on your first Sunday at Baptist Temple: times, parking, kids, dress, and where to go.",
- page_hero("Plan a visit", "Trying a new church can be stressful. We want to help.",
+ page_hero("Plan a visit", "Trying a new church can be stressful. We want to <em>help.</em>",
   "Here's everything you need to know before your first Sunday, from where to park to what your kids will do.", IMG["front"]) + f'''
 <section class="section">
   <div class="wrap">
@@ -290,9 +296,9 @@ page("/plan-a-visit/", "Plan a Visit · Baptist Temple, Connersville",
   </div>
 </section>
 
-<section class="section paper">
+<section class="section mist">
   <div class="wrap split">
-    <div class="reveal"><img class="photo" src="{IMG["lectern"]}" alt="Pastor preaching from the lectern during a Sunday service" loading="lazy"></div>
+    <div class="reveal photo-wrap"><img class="photo" src="{IMG["lectern"]}" alt="Pastor preaching from the lectern during a Sunday service" loading="lazy"></div>
     <div class="reveal">
       <span class="eyebrow">What to expect</span>
       <h2>Family-friendly, Bible-centered, and relaxed.</h2>
@@ -308,7 +314,7 @@ page("/plan-a-visit/", "Plan a Visit · Baptist Temple, Connersville",
 
 <section class="section">
   <div class="wrap">
-    <div class="cards">
+    <div class="cards stagger">
       <div class="card reveal"><span class="when">Parking</span><h3>Reserved for guests</h3><p>First-time guest spaces are right by the main entrance, with handicap parking nearby.</p></div>
       <div class="card reveal"><span class="when">Kids</span><h3>Safe and fun</h3><p>Nursery during all services, Sunday School at 9:30, and Children's Church at 10:30. Every worker is a screened and trained adult.</p></div>
       <div class="card reveal"><span class="when">Arriving</span><h3>Come a few minutes early</h3><p>Give yourself time to park and find your way. Greeters will help you find a Sunday School class for your family.</p></div>
@@ -317,7 +323,7 @@ page("/plan-a-visit/", "Plan a Visit · Baptist Temple, Connersville",
   </div>
 </section>
 
-<section class="section paper">
+<section class="section mist">
   <div class="wrap split flip">
     <div class="reveal"><iframe class="map" src="{MAP_EMBED}" title="Map to Baptist Temple" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="min-height:380px"></iframe></div>
     <div class="reveal">
@@ -348,12 +354,12 @@ BELIEFS = [
 acc = "".join(f'<details><summary>{t}</summary><div><p>{d}</p></div></details>' for t, d in BELIEFS)
 page("/about/", "Our Story & Beliefs · Baptist Temple, Connersville",
  "Baptist Temple's mission, vision, and statement of faith: deepening faith, maturing in Christ, and reaching our community.",
- page_hero("About us", "A ministry for the whole family.",
+ page_hero("About us", "A ministry for the <em>whole family.</em>",
   "We're committed to serving and nurturing every member, so our ministry supports the spiritual journey of every age.", IMG["aerial"]) + f'''
 <section class="section">
   <div class="wrap">
     <div class="section-head reveal"><div><span class="eyebrow">Our mission</span><h2>Three things we're about.</h2></div></div>
-    <div class="steps">
+    <div class="steps stagger">
       <div class="step reveal"><h3>Deepening faith</h3><p>Growing in our knowledge of God's Word and how to live it out.</p></div>
       <div class="step reveal"><h3>Maturing in Christ</h3><p>Becoming committed, growing followers of Jesus.</p></div>
       <div class="step reveal"><h3>Community outreach</h3><p>Meeting the physical and spiritual needs of Connersville and leading people to a relationship with Jesus Christ.</p></div>
@@ -361,7 +367,7 @@ page("/about/", "Our Story & Beliefs · Baptist Temple, Connersville",
   </div>
 </section>
 
-<section class="section paper" id="beliefs">
+<section class="section mist" id="beliefs">
   <div class="wrap split" style="align-items:start">
     <div class="reveal">
       <span class="eyebrow">What we believe</span>
@@ -375,7 +381,7 @@ page("/about/", "Our Story & Beliefs · Baptist Temple, Connersville",
 
 <section class="section">
   <div class="wrap split">
-    <div class="reveal"><img class="photo" src="{IMG["coffee"]}" alt="A church member serving coffee and donuts in the café" loading="lazy"></div>
+    <div class="reveal photo-wrap"><img class="photo" src="{IMG["coffee"]}" alt="A church member serving coffee and donuts in the café" loading="lazy"></div>
     <div class="reveal">
       <span class="eyebrow">Our team</span>
       <h2>Meet the people who serve here.</h2>
@@ -412,31 +418,31 @@ cards = []
 for i, (name, role, p, bio) in enumerate(STAFF):
     cls = "person lead" if i == 0 else "person"
     w = 1000 if i == 0 else 600
-    cards.append(f'<article class="{cls} reveal"><img src="{img(p, w)}" alt="{name}, {role}" loading="lazy"><div class="person-body"><h3>{name}</h3><div class="role">{role}</div>{f"<p>{bio}</p>" if bio else ""}</div></article>')
+    cards.append(f'<article class="{cls} reveal"><div class="ph"><img src="{img(p, w)}" alt="{name}, {role}" loading="lazy"></div><div class="person-body"><h3>{name}</h3><div class="role">{role}</div>{f"<p>{bio}</p>" if bio else ""}</div></article>')
 page("/staff/", "Our Team · Baptist Temple, Connersville",
  "Meet the pastors and staff of Baptist Temple in Connersville, Indiana.",
- page_hero("Our team", "The people who serve at Baptist Temple.",
+ page_hero("Our team", "The people who <em>serve</em> at Baptist Temple.",
   "Have a question for someone on our team? Email the office and we'll get it to the right person.", IMG["worship"], "center 30%") + f'''
 <section class="section">
-  <div class="wrap"><div class="team">{"".join(cards)}</div>
+  <div class="wrap"><div class="team stagger">{"".join(cards)}</div>
   <p class="form-note" style="margin-top:28px">Reach any of our staff at <a href="mailto:{EMAIL}">{EMAIL}</a> or {PHONE}.</p></div>
 </section>''')
 
 # ---------------------------------------------------------------- KIDS
 page("/kids/", "Kids · Baptist Temple, Connersville",
  "Temple Kids at Baptist Temple: Sunday School, Kids Church, Wednesday nights, and VBS for kids from birth through 6th grade.",
- page_hero("Temple Kids", "The best part of their week.",
+ page_hero("Temple Kids", "The best part of <em>their week.</em>",
   "From birth through 6th grade, we want Sundays and Wednesdays to be the best days of your child's week: fun, safe, and full of the gospel.", IMG["kids"]) + f'''
 <section class="section">
   <div class="wrap">
-    <div class="cards">
+    <div class="cards stagger">
       <div class="card reveal"><span class="when">Safe</span><h3>Secure check-in</h3><p>Every child is checked in with a matching pick-up receipt. Volunteers are trained and pass several background checks, and safety staff routinely patrol the building.</p></div>
       <div class="card reveal"><span class="when">Fun</span><h3>Songs, games &amp; crafts</h3><p>Kids learn through songs, games, crafts, and lessons built for their age.</p></div>
       <div class="card reveal"><span class="when">Gospel-centered</span><h3>Jesus at the center</h3><p>Every lesson points kids to God's love for them and their relationship with Him.</p></div>
     </div>
   </div>
 </section>
-<section class="section paper">
+<section class="section mist">
   <div class="wrap">
     <div class="section-head reveal"><div><span class="eyebrow">Programs</span><h2>Something every week of the year.</h2></div></div>
     <div class="table-wrap reveal"><table class="schedule">
@@ -453,7 +459,7 @@ page("/kids/", "Kids · Baptist Temple, Connersville",
 </section>
 <section class="section">
   <div class="wrap split">
-    <div class="reveal"><img class="photo" src="{IMG["boy"]}" alt="A young boy playing with toys in the kids' area" loading="lazy"></div>
+    <div class="reveal photo-wrap"><img class="photo" src="{IMG["boy"]}" alt="A young boy playing with toys in the kids' area" loading="lazy"></div>
     <div class="reveal"><span class="eyebrow">First time?</span><h2>We'll help you get checked in.</h2><p class="lede">Arrive a few minutes early and a greeter will walk you to the right room. The nursery is in the main building, off the lobby.</p><a class="btn btn-blue" href="/plan-a-visit/">Plan a Visit {ICON["arrow"]}</a></div>
   </div>
 </section>''')
@@ -461,11 +467,11 @@ page("/kids/", "Kids · Baptist Temple, Connersville",
 # ---------------------------------------------------------------- STUDENTS
 page("/students/", "Students · Baptist Temple, Connersville",
  "Student ministry for 7th through 12th grade at Baptist Temple: Wednesdays 6:30 to 8:30 PM.",
- page_hero("Students · 7th to 12th grade", "Christ-centered difference makers.",
+ page_hero("Students · 7th to 12th grade", "Christ-centered <em>difference makers.</em>",
   "Games, food, and real conversations about God's Word. Wednesdays from 6:30 to 8:30 PM.", IMG["students"], "center 30%") + f'''
 <section class="section">
   <div class="wrap">
-    <div class="cards">
+    <div class="cards stagger">
       <div class="card dark reveal"><span class="when">Wednesdays</span><h3>6:30 to 8:30 PM</h3><p>Students in 7th through 12th grade meet in the Youth Room in the Family Life Center.</p></div>
       <div class="card reveal"><span class="when">Safe</span><h3>Screened leaders</h3><p>Every volunteer who works with students goes through screening and follows church policies.</p></div>
       <div class="card reveal"><span class="when">Fun</span><h3>Games and lessons</h3><p>Students have fun together while learning about God's love.</p></div>
@@ -473,10 +479,10 @@ page("/students/", "Students · Baptist Temple, Connersville",
     </div>
   </div>
 </section>
-<section class="section paper">
+<section class="section mist">
   <div class="wrap split">
     <div class="reveal"><span class="eyebrow">Sunday mornings</span><h2>The Orchard</h2><p class="lede">Our Sunday School class for grades 7 to 12 meets at 9:30 AM in the Youth Room (FLC Room 202), led by Youth Pastor Ethan Rogers.</p><a class="btn btn-blue" href="/staff/">Meet Pastor Ethan {ICON["arrow"]}</a></div>
-    <div class="reveal"><img class="photo" src="{IMG["students"]}" alt="A student playing air hockey in the youth room" loading="lazy"></div>
+    <div class="reveal photo-wrap"><img class="photo" src="{IMG["students"]}" alt="A student playing air hockey in the youth room" loading="lazy"></div>
   </div>
 </section>''')
 
@@ -492,7 +498,7 @@ rows_kids = [("Nursery", "Infants and one-year-olds", "Sam &amp; Tiffany Tuttle"
 def trows(rows): return "".join(f"<tr><td>{a}</td><td>{b}</td><td>{c}</td><td>{d}</td></tr>" for a, b, c, d in rows)
 page("/sunday-school/", "Sunday School · Baptist Temple, Connersville",
  "Sunday School at Baptist Temple: classes for kids, students, and adults every Sunday at 9:30 AM.",
- page_hero("Sundays · 9:30 AM", "A class for every age.",
+ page_hero("Sundays · 9:30 AM", "A class for <em>every age.</em>",
   "Classes meet across campus before the worship service. Greeters at the main entrances and Welcome Center can point you to the right room.", IMG["class"]) + f'''
 <section class="section">
   <div class="wrap">
@@ -500,7 +506,7 @@ page("/sunday-school/", "Sunday School · Baptist Temple, Connersville",
     <div class="table-wrap reveal"><table class="schedule"><thead><tr><th>Class</th><th>Who it's for</th><th>Teachers</th><th>Room</th></tr></thead><tbody>{trows(rows_adult)}</tbody></table></div>
   </div>
 </section>
-<section class="section paper">
+<section class="section mist">
   <div class="wrap">
     <div class="section-head reveal"><div><span class="eyebrow">Kids &amp; students</span><h2>Classes for kids and students</h2><p class="lede">Children's and youth rooms are in the Family Life Center (FLC), next to the main building. The nursery and 2's &amp; 3's are in the main building.</p></div></div>
     <div class="table-wrap reveal"><table class="schedule"><thead><tr><th>Class</th><th>Who it's for</th><th>Teachers</th><th>Room</th></tr></thead><tbody>{trows(rows_kids)}</tbody></table></div>
@@ -522,14 +528,14 @@ MIN = [
 mcards = "".join(f'<div class="card reveal">{f"<span class=when>{w}</span>" if w else ""}<h3>{t}</h3><p>{d}</p></div>' for t, w, d in MIN)
 page("/ministries/", "Ministries · Baptist Temple, Connersville",
  "Adult ministries and community outreach at Baptist Temple: men's and women's ministries, senior adults, Sonshiner's, missions, and more.",
- page_hero("Adults &amp; outreach", "Find your people. Serve your neighbors.",
+ page_hero("Adults &amp; outreach", "Find your people. <em>Serve your neighbors.</em>",
   "There's a place for you to grow and serve at Baptist Temple. For details, call the church office or check the weekly bulletin.", IMG["adults"]) + f'''
 <section class="section">
-  <div class="wrap"><div class="cards">{mcards}</div></div>
+  <div class="wrap"><div class="cards stagger">{mcards}</div></div>
 </section>
-<section class="section paper">
+<section class="section mist">
   <div class="wrap split">
-    <div class="reveal"><img class="photo" src="{IMG["coffee"]}" alt="A church member serving coffee and donuts in the café" loading="lazy"></div>
+    <div class="reveal photo-wrap"><img class="photo" src="{IMG["coffee"]}" alt="A church member serving coffee and donuts in the café" loading="lazy"></div>
     <div class="reveal"><span class="eyebrow">Serve</span><h2>Want to get involved?</h2><p class="lede">Fill out a connection card or reach out to our staff, and we'll help you find a place to serve.</p><div class="btns"><a class="btn btn-blue" href="/connect/">Get Connected</a><a class="btn btn-line" href="/contact/">Contact Us</a></div></div>
   </div>
 </section>''')
@@ -537,21 +543,21 @@ page("/ministries/", "Ministries · Baptist Temple, Connersville",
 # ---------------------------------------------------------------- WATCH
 page("/watch/", "Watch Live · Baptist Temple, Connersville",
  "Watch Baptist Temple live on Facebook and YouTube every Sunday at 10:30 AM, or catch up on past messages.",
- page_hero("Watch", "Worship with us from anywhere.",
+ page_hero("Watch", "Worship with us from <em>anywhere.</em>",
   "We stream every Sunday at 10:30 AM on Facebook and YouTube. Past messages are always available on our YouTube channel.", IMG["preach"], "30% center") + f'''
 <section class="section">
   <div class="wrap">
-    <div class="cards">
+    <div class="cards stagger">
       <a class="card dark reveal" href="{YT_LIVE}" style="text-decoration:none"><span class="when">Live Sundays 10:30</span><h3>Watch on YouTube</h3><p>Join the live stream, or browse past streams and messages.</p></a>
       <a class="card reveal" href="{FB}" style="text-decoration:none"><span class="when">Live Sundays 10:30</span><h3>Watch on Facebook</h3><p>Follow Connersville Baptist Temple on Facebook to catch us live.</p></a>
       <a class="card reveal" href="{YT}" style="text-decoration:none"><span class="when">Anytime</span><h3>Past Messages</h3><p>Catch up on a message you missed or share one with a friend.</p></a>
     </div>
   </div>
 </section>
-<section class="section paper">
+<section class="section mist">
   <div class="wrap split">
     <div class="reveal"><span class="eyebrow">Watching from home?</span><h2>Let us know you joined us.</h2><p class="lede">We'd love to know you're part of the Baptist Temple family online. Fill out a connection card and someone from our team will reach out.</p><div class="btns"><a class="btn btn-blue" href="/connect/">Connection Card</a><a class="btn btn-line" href="/prayer/">Prayer Request</a></div></div>
-    <div class="reveal"><img class="photo" src="{IMG["worship"]}" alt="Worship team leading a Sunday service" loading="lazy" style="aspect-ratio:4/3;object-position:center 30%"></div>
+    <div class="reveal photo-wrap"><img class="photo" src="{IMG["worship"]}" alt="Worship team leading a Sunday service" loading="lazy" style="aspect-ratio:4/3;object-position:center 30%"></div>
   </div>
 </section>''')
 
@@ -574,19 +580,19 @@ def form(kind):
 
 page("/connect/", "Connection Card · Baptist Temple, Connersville",
  "Let Baptist Temple know you joined us in person or online, or that you're interested in making it your church home.",
- page_hero("Connection card", "We're glad you're here.",
+ page_hero("Connection card", "We're glad <em>you're here.</em>",
   "Let us know you joined us in person or online, or that you're interested in making Baptist Temple your home church. Someone from our staff or leadership team will be in touch.", IMG["coffee"]) + f'''
 <section class="section"><div class="wrap" style="max-width:880px">{form("connect")}</div></section>''')
 
 page("/prayer/", "Prayer Requests · Baptist Temple, Connersville",
  "Send a prayer request to the pastors and prayer team at Baptist Temple in Connersville, Indiana.",
- page_hero("Prayer requests", "You don't have to carry it alone.",
+ page_hero("Prayer requests", "You don't have to carry it <em>alone.</em>",
   "Share what's on your heart. Our pastors and prayer team would be honored to pray for you.", IMG["lectern"]) + f'''
 <section class="section"><div class="wrap" style="max-width:880px">{form("prayer")}</div></section>''')
 
 page("/contact/", "Contact · Baptist Temple, Connersville",
  "Contact Baptist Temple: 1380 IN-44, Connersville, IN 47331 · 765-825-5196 · staff@baptist-temple.com",
- page_hero("Contact us", "We'd love to hear from you.",
+ page_hero("Contact us", "We'd love to <em>hear from you.</em>",
   "Call, email, or stop by. Our office team is happy to help with anything you need.", IMG["front"]) + f'''
 <section class="section">
   <div class="wrap">
