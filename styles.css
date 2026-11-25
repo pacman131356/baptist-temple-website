@@ -494,3 +494,13 @@ p{margin:0 0 1em;text-wrap:pretty}
   .page-hero.side .bg{left:0;width:100%}
   .page-hero.side::before{background:linear-gradient(180deg,rgba(12,22,33,.55),rgba(12,22,33,.9))}
 }
+
+/* Home hero: on wider screens the photo sits on the right so the worship leader's face is never behind the nav or headline */
+@media (min-width:900px){
+  .hero-bg{left:40%}
+  .hero-bg img{object-position:41% 6% !important}
+  .hero::before{background:linear-gradient(90deg,var(--night) 0%,var(--night) 40%,rgba(12,22,33,.55) 50%,rgba(12,22,33,0) 72%),linear-gradient(180deg,rgba(12,22,33,.35) 0%,rgba(12,22,33,0) 30%,rgba(12,22,33,0) 62%,rgba(12,22,33,.85) 92%,var(--night) 100%)}
+}
+@media (max-width:899px){
+  .hero-bg img{object-position:41% 18% !important}
+}

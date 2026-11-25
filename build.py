@@ -33,7 +33,7 @@ IMG = {
 
 # Where the faces are in each photo (object-position), so crops never cut them off.
 FOCUS = {
-    "IMG_6968": "47% 40%", "IMG_7106": "53% 42%", "IMG_6993": "40% 24%", "IMG_6753": "55% 28%",
+    "IMG_6968": "41% 24%", "IMG_7106": "53% 42%", "IMG_6993": "40% 24%", "IMG_6753": "55% 28%",
     "IMG_5848": "55% 14%", "IMG_6673": "62% 32%", "IMG_6537": "90% 26%", "IMG_6657": "37% 70%",
     "IMG_6802": "50% 32%", "priscilla-du-preez": "85% 0%", "jesus-loves-austin": "75% 0%",
     "erika-giraud": "58% 12%", "artem-kniaz": "50% 58%", "IMG_6869": "62% 50%", "IMG_6888": "70% 35%",
