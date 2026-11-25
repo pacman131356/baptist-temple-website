@@ -94,9 +94,9 @@ p{margin:0 0 1em;text-wrap:pretty}
 .nav-menu,.nav-end,.nav-brand .word{transition:opacity .25s .3s,visibility 0s .3s}
 /* folded into the badge */
 .nav{transition:width .6s cubic-bezier(.7,0,.2,1),top .4s var(--ease),background .35s,border-color .35s,box-shadow .35s,backdrop-filter .35s}
-.nav.collapsed{width:58px;background:transparent;border-color:transparent;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.nav.collapsed{width:60px;background:transparent;border-color:transparent;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
 .nav.collapsed .nav-row{overflow:hidden;padding:0;min-height:58px}
-.nav.collapsed .mark{width:58px;height:58px;box-shadow:0 12px 30px -8px rgba(0,0,0,.55)}
+.nav.collapsed .mark{width:56px;height:56px}
 .nav.collapsed .word,.nav.collapsed .nav-menu,.nav.collapsed .nav-end{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s,visibility 0s .12s}
 .nav.collapsed .mark{transform:rotate(-8deg)}
 .nav.collapsed .nav-brand:hover .mark{transform:rotate(0) scale(1.06)}
