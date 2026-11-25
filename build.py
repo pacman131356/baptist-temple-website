@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Builds the Baptist Temple concept preview: one shared header/footer, one folder per page.
 Run: python3 build.py   (writes index.html files; no other dependencies)"""
-import os, html
+import os, html, re
 
 CDN = "https://images.squarespace-cdn.com/content/v1/69c2f93f5ac9211335b03425/"
 def img(path, w=1500): return f"{CDN}{path}?format={w}w"
@@ -22,7 +22,32 @@ IMG = {
     "coffee": img("8f2c42c4-ee3f-480e-bc2a-cd5545440b89/IMG_6537.jpg"),
     "boy": img("e3d21c45-2af9-4c28-93d2-de2113e31e56/IMG_6657.jpg"),
     "ss": img("8a7ea41b-2a96-48a9-882c-54d776501e9c/IMG_6686.jpg"),
+    "kids_wing": img("ab1c47e3-beff-4fee-9a3f-39dbe6578914/IMG_6861.jpg", 2500),
+    "stu_hero": img("c07a9fee-08c5-4567-b940-0565759b2cad/IMG_6802.jpg", 2500),
+    "p_ss": img("25643c34-7deb-4916-bfea-d50b1383e64f/priscilla-du-preez--mCXEsLd2sU-unsplash.jpg"),
+    "p_kc": img("f3d977f8-3d03-4ac1-a53b-d6e30e2194fe/jesus-loves-austin-TqHDqXkWSCk-unsplash.jpg"),
+    "p_vbs": img("ce2c9cdf-5f4c-4ea9-8eed-35e77990adef/erika-giraud-4EFeD-VTgu4-unsplash.jpg", 2500),
+    "p_tk": img("6f177715-7f72-401d-9c62-b469069b9b12/IMG_6869.jpg"),
+    "p_sum": img("e0cf7c91-954b-4948-9468-33e707481973/artem-kniaz-DqgMHzeio7g-unsplash.jpg"),
 }
+
+# Where the faces are in each photo (object-position), so crops never cut them off.
+FOCUS = {
+    "IMG_6968": "47% 40%", "IMG_7106": "53% 42%", "IMG_6993": "40% 24%", "IMG_6753": "55% 28%",
+    "IMG_5848": "55% 14%", "IMG_6673": "62% 32%", "IMG_6537": "90% 26%", "IMG_6657": "37% 70%",
+    "IMG_6802": "50% 32%", "priscilla-du-preez": "80% 22%", "jesus-loves-austin": "70% 18%",
+    "erika-giraud": "50% 58%", "artem-kniaz": "50% 50%", "IMG_6869": "62% 50%", "IMG_6888": "70% 35%",
+}
+def apply_focus(doc):
+    def fix(m):
+        tag = m.group(0)
+        key = next((k for k in FOCUS if k in tag), None)
+        if not key: return tag
+        pos = FOCUS[key]
+        if "object-position:" in tag: return re.sub(r"object-position:[^;\"]*", "object-position:" + pos, tag)
+        if 'style="' in tag: return tag.replace('style="', f'style="object-position:{pos};', 1)
+        return tag[:-1].rstrip("/").rstrip() + f' style="object-position:{pos}">'
+    return re.sub(r"<img\b[^>]*>", fix, doc)
 GIVE = "https://giving.myamplify.io//app/giving/temple"
 FB = "https://www.facebook.com/connersvillebt/"
 YT = "https://www.youtube.com/@ConnersvilleBaptistTemple/featured"
@@ -161,7 +186,7 @@ def page(path, title, desc, body, current=None):
 '''
     out = "index.html" if path == "/" else path.strip("/") + "/index.html"
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
-    open(out, "w").write(doc)
+    open(out, "w").write(apply_focus(doc))
 
 def page_hero(eyebrow, h1, lede, bg, pos="center"):
     return f'''<section class="page-hero">
@@ -228,7 +253,7 @@ page("/", "Baptist Temple · Connersville, Indiana · Sundays 9:30 & 10:30",
     </div>
     <div class="bento">
       <a class="tile" href="/sunday-school/"><img src="{IMG["class"]}" alt="Adults taking notes during a Sunday School class" loading="lazy"><div class="tile-body"><div><small>Sundays · 9:30</small><h3>Sunday School</h3></div><span class="go">{ICON["arrow"]}</span></div></a>
-      <a class="tile" href="/kids/"><img src="{IMG["kids"]}" alt="Temple Kids sign on the door of the kids' room" loading="lazy"><div class="tile-body"><div><small>Birth to 6th grade</small><h3>Kids</h3></div><span class="go">{ICON["arrow"]}</span></div></a>
+      <a class="tile" href="/kids/"><img src="{IMG["p_vbs"]}" alt="Kids raising their hands during a Bible lesson" loading="lazy"><div class="tile-body"><div><small>Birth to 6th grade</small><h3>Kids</h3></div><span class="go">{ICON["arrow"]}</span></div></a>
       <a class="tile" href="/students/"><img src="{IMG["students"]}" alt="A student playing air hockey in the youth room" loading="lazy"><div class="tile-body"><div><small>7th to 12th grade</small><h3>Students</h3></div><span class="go">{ICON["arrow"]}</span></div></a>
       <a class="tile" href="/ministries/"><img src="{IMG["adults"]}" alt="Adults studying their Bibles together around a table" loading="lazy" style="object-position:center 40%"><div class="tile-body"><div><small>Groups, missions &amp; outreach</small><h3>Adults &amp; Outreach</h3></div><span class="go">{ICON["arrow"]}</span></div></a>
     </div>
@@ -431,54 +456,76 @@ page("/staff/", "Our Team · Baptist Temple, Connersville",
 </section>''')
 
 # ---------------------------------------------------------------- KIDS
+PICO = {
+ "safe": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.8-7 9-4-1.2-7-4.5-7-9V6z"/><path d="M8.8 12.2l2.2 2.2 4.4-4.6"/></svg>',
+ "fun": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c.9 1.3 2.1 2 3.5 2s2.6-.7 3.5-2"/><path d="M9 9.5h.01M15 9.5h.01" stroke-width="2.6"/></svg>',
+ "gospel": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 19.5V5.5"/><path d="M12 7v7M9.5 9.5h5"/></svg>',
+ "talk": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12v8H9l-4 3v-3H4z"/><path d="M16 9h4v8h-1v3l-4-3h-4v-2"/></svg>',
+}
+def pillars(items):
+    return '<div class="pillars stagger">' + "".join(
+        f'<div class="pillar reveal"><span class="p-ico">{PICO[ic]}</span><span class="p-label">{i:02d} · {lab}</span><h3>{h}</h3><p>{t}</p></div>'
+        for i, (ic, lab, h, t) in enumerate(items, 1)) + '</div>'
+def programs(items):
+    return '<div class="programs stagger">' + "".join(
+        f'<article class="prog{" big" if big else ""} reveal"><div class="ph"><img src="{src}" alt="{alt}" loading="lazy"><span class="chip">{when}</span></div><div class="body"><h3>{h}</h3><p>{t}</p></div></article>'
+        for big, src, alt, when, h, t in items) + '</div>'
+
 page("/kids/", "Kids · Baptist Temple, Connersville",
  "Temple Kids at Baptist Temple: Sunday School, Kids Church, Wednesday nights, and VBS for kids from birth through 6th grade.",
- page_hero("Temple Kids", "The best part of <em>their week.</em>",
-  "From birth through 6th grade, we want Sundays and Wednesdays to be the best days of your child's week: fun, safe, and full of the gospel.", IMG["kids"]) + f'''
+ page_hero("Temple Kids · Birth to 6th grade", "The best part of <em>their week.</em>",
+  "A place where your child can laugh and play, learn and grow, make friends, and most importantly, discover God's great love for them.", IMG["p_vbs"]) + f"""
 <section class="section">
   <div class="wrap">
-    <div class="cards stagger">
-      <div class="card reveal"><span class="when">Safe</span><h3>Secure check-in</h3><p>Every child is checked in with a matching pick-up receipt. Volunteers are trained and pass several background checks, and safety staff routinely patrol the building.</p></div>
-      <div class="card reveal"><span class="when">Fun</span><h3>Songs, games &amp; crafts</h3><p>Kids learn through songs, games, crafts, and lessons built for their age.</p></div>
-      <div class="card reveal"><span class="when">Gospel-centered</span><h3>Jesus at the center</h3><p>Every lesson points kids to God's love for them and their relationship with Him.</p></div>
-    </div>
+    <div class="section-head reveal"><div><span class="eyebrow">Why parents love it</span><h2>Fun, safe, and <em>relational.</em></h2><p class="lede">Our goal is to make Sundays and Wednesdays the best days of your child's week, so they can meet Jesus on their level.</p></div></div>
+    {pillars([
+      ("safe", "Safe", "Secure check-in", "Every child is checked in with a matching pick-up receipt. Volunteers are highly trained and screened with several background checks, and our safety team routinely patrols the building."),
+      ("fun", "Fun", "Joy you can hear", "We find our joy in Jesus, so we put a big emphasis on fun. Songs, games, crafts, and lessons all teach kids about God and His love for them."),
+      ("gospel", "Gospel-focused", "Jesus at the center", "We gather to worship the God who wants a relationship with us, and we make sure your child understands that every Sunday they're with us."),
+    ])}
   </div>
 </section>
 <section class="section mist">
   <div class="wrap">
-    <div class="section-head reveal"><div><span class="eyebrow">Programs</span><h2>Something every week of the year.</h2></div></div>
-    <div class="table-wrap reveal"><table class="schedule">
-      <thead><tr><th>Program</th><th>When</th><th>What happens</th></tr></thead>
-      <tbody>
-        <tr><td>Sunday School</td><td>Sundays, 9:30 AM</td><td>Age-based classes, from the nursery through 6th grade.</td></tr>
-        <tr><td>Kids Church</td><td>Sundays, 10:30 AM</td><td>Elementary kids meet in the Temple Kids Room for worship, Bible study, and games during the morning service.</td></tr>
-        <tr><td>Temple Kids</td><td>Wednesdays during the school year, 6:30 to 8:00 PM</td><td>A free weekly dinner, lessons, games, crafts, and Bible memory.</td></tr>
-        <tr><td>Summer Programs</td><td>Summer Wednesdays, 6:30 to 8:00 PM</td><td>Kids activities while Temple Kids is on break.</td></tr>
-        <tr><td>Vacation Bible School</td><td>Summers, usually July</td><td>A week of music, games, Bible study, crafts, and skits.</td></tr>
-      </tbody>
-    </table></div>
+    <div class="section-head reveal"><div><span class="eyebrow">Our kids programs</span><h2>Something every <em>week of the year.</em></h2></div></div>
+    {programs([
+      (True, IMG["p_ss"], "A child reading a Bible with a teacher", "Sundays · 9:30 AM", "Sunday School", "Age-based classes from the nursery through 6th grade, in kid-friendly rooms in the main building and the Family Life Center."),
+      (True, IMG["p_kc"], "A girl playing a game at a table during Kids Church", "Sundays · 10:30 AM", "Kids Church", "For elementary-age kids. We meet in the Temple Kids Room during the morning service for our own worship, Bible study, games, and more."),
+      (False, IMG["p_tk"], "The Temple Kids sign in the kids wing", "Wednesdays · 6:30 PM", "Temple Kids", "During the school year, 6:30 to 8:00 PM: a free dinner every week, plus lessons, games, crafts, Bible memory, and more."),
+      (False, IMG["p_sum"], "Kids playing with a colorful parachute outside", "Summers · 6:30 PM", "Summer Programs", "When Temple Kids is on break for the summer, we keep the fun going with other kids activities from 6:30 to 8:00 PM."),
+      (False, IMG["p_vbs"], "Kids raising their hands during Vacation Bible School", "Summers · Usually July", "Vacation Bible School", "A fun-packed week of music, games, Bible study, crafts, skits, and so much more. Get ready for a wild week every summer."),
+    ])}
   </div>
 </section>
 <section class="section">
   <div class="wrap split">
-    <div class="reveal photo-wrap"><img class="photo" src="{IMG["boy"]}" alt="A young boy playing with toys in the kids' area" loading="lazy"></div>
+    <div class="reveal photo-wrap"><img class="photo" src="{IMG["boy"]}" alt="A baby playing with toys in the nursery" loading="lazy"></div>
     <div class="reveal"><span class="eyebrow">First time?</span><h2>We'll help you get checked in.</h2><p class="lede">Arrive a few minutes early and a greeter will walk you to the right room. The nursery is in the main building, off the lobby.</p><a class="btn btn-blue" href="/plan-a-visit/">Plan a Visit {ICON["arrow"]}</a></div>
   </div>
-</section>''')
+</section>""")
 
 # ---------------------------------------------------------------- STUDENTS
 page("/students/", "Students · Baptist Temple, Connersville",
  "Student ministry for 7th through 12th grade at Baptist Temple: Wednesdays 6:30 to 8:30 PM.",
  page_hero("Students · 7th to 12th grade", "Christ-centered <em>difference makers.</em>",
-  "Games, food, and real conversations about God's Word. Wednesdays from 6:30 to 8:30 PM.", IMG["students"], "center 30%") + f'''
+  "From the fun lessons to the crazy games, everything we do is about helping students follow Jesus and make a difference.", IMG["stu_hero"]) + f"""
+<section class="facts-band">
+  <div class="wrap">
+    <div class="facts reveal">
+      <div class="fact"><small>Wednesdays</small><strong>6:30<span>&ndash;</span>8:30 PM</strong></div>
+      <div class="fact"><small>Grades</small><strong>7th<span>&ndash;</span>12th</strong></div>
+      <div class="fact"><small>Every week</small><strong>Games · Food · Lessons</strong></div>
+    </div>
+  </div>
+</section>
 <section class="section">
   <div class="wrap">
-    <div class="cards stagger">
-      <div class="card dark reveal"><span class="when">Wednesdays</span><h3>6:30 to 8:30 PM</h3><p>Students in 7th through 12th grade meet in the Youth Room in the Family Life Center.</p></div>
-      <div class="card reveal"><span class="when">Safe</span><h3>Screened leaders</h3><p>Every volunteer who works with students goes through screening and follows church policies.</p></div>
-      <div class="card reveal"><span class="when">Fun</span><h3>Games and lessons</h3><p>Students have fun together while learning about God's love.</p></div>
-      <div class="card reveal"><span class="when">Authentic</span><h3>Come as you are</h3><p>Students can be themselves and grow in Christ together.</p></div>
-    </div>
+    <div class="section-head reveal"><div><span class="eyebrow">What to expect</span><h2>A place to be <em>yourself.</em></h2></div></div>
+    {pillars([
+      ("safe", "Safe", "Screened leaders", "Your student's safety is one of our highest priorities. Every volunteer who works with students goes through screening and follows the church's protection policies."),
+      ("fun", "Fun", "Crazy games, real joy", "We find our joy in Jesus, so fun is a big deal here. Through games and lessons, students learn about God and His love for them."),
+      ("talk", "Authentic", "Real life, real faith", "Students deal with a lot in today's culture. We work to create an authentic space where they can be themselves and grow in Christ together."),
+    ])}
   </div>
 </section>
 <section class="section mist">
@@ -486,7 +533,7 @@ page("/students/", "Students · Baptist Temple, Connersville",
     <div class="reveal"><span class="eyebrow">Sunday mornings</span><h2>The Orchard</h2><p class="lede">Our Sunday School class for grades 7 to 12 meets at 9:30 AM in the Youth Room (FLC Room 202), led by Youth Pastor Ethan Rogers.</p><a class="btn btn-blue" href="/staff/">Meet Pastor Ethan {ICON["arrow"]}</a></div>
     <div class="reveal photo-wrap"><img class="photo" src="{IMG["students"]}" alt="A student playing air hockey in the youth room" loading="lazy"></div>
   </div>
-</section>''')
+</section>""")
 
 # ---------------------------------------------------------------- SUNDAY SCHOOL
 rows_adult = [("Adult Bible Class", "Adults and senior adults", "Dan Cline", "Worship Center, main building"),
