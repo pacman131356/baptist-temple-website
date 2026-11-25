@@ -374,7 +374,7 @@ p{margin:0 0 1em;text-wrap:pretty}
 .foot-times strong{color:#fff;display:block;font:800 1.5rem/1.15 var(--display);font-stretch:112%;margin-bottom:6px}
 .foot-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid rgba(255,255,255,.12);margin-top:52px;padding-top:24px;font-size:.88rem}
 .foot-bottom a{color:rgba(255,255,255,.82)}
-.big-word{font:800 clamp(3.4rem,13.5vw,12rem)/.8 var(--display);font-stretch:125%;letter-spacing:-.05em;color:rgba(255,255,255,.06);white-space:nowrap;margin:56px 0 -.14em;user-select:none;overflow:hidden}
+.big-word{font:800 clamp(2.4rem,9.4vw,7.6rem)/.8 var(--display);font-stretch:112%;letter-spacing:-.05em;color:rgba(255,255,255,.06);white-space:nowrap;margin:56px 0 -.14em;user-select:none;overflow:hidden}
 .social{display:flex;gap:6px}
 .social a{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.08);color:#fff;transition:background .2s,transform .2s}
 .social a:hover{background:var(--blue);transform:translateY(-2px)}
