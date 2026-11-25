@@ -391,3 +391,15 @@ p{margin:0 0 1em;text-wrap:pretty}
   .marquee-track{animation:none}
   html{scroll-behavior:auto}
 }
+
+/* phone tuning */
+@media (max-width:600px){
+  h1{font-size:clamp(2.4rem,11vw,3.2rem)}
+  .hero{min-height:0}
+  .hero-inner{padding-top:150px;padding-bottom:40px}
+  .rotator > span{white-space:normal}
+  .hero-sub{margin:20px 0 26px}
+  .hero-foot{margin-top:32px}
+  .hero-times div:nth-child(3){display:none}
+  .hero .eyebrow{font-size:.66rem;letter-spacing:.16em}
+}
