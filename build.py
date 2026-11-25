@@ -36,7 +36,7 @@ FOCUS = {
     "IMG_6968": "47% 40%", "IMG_7106": "53% 42%", "IMG_6993": "40% 24%", "IMG_6753": "55% 28%",
     "IMG_5848": "55% 14%", "IMG_6673": "62% 32%", "IMG_6537": "90% 26%", "IMG_6657": "37% 70%",
     "IMG_6802": "50% 32%", "priscilla-du-preez": "80% 22%", "jesus-loves-austin": "70% 18%",
-    "erika-giraud": "58% 12%", "artem-kniaz": "50% 50%", "IMG_6869": "62% 50%", "IMG_6888": "70% 35%",
+    "erika-giraud": "58% 12%", "artem-kniaz": "50% 58%", "IMG_6869": "62% 50%", "IMG_6888": "70% 35%",
 }
 def apply_focus(doc):
     def fix(m):
@@ -474,7 +474,7 @@ def programs(items):
 page("/kids/", "Kids · Baptist Temple, Connersville",
  "Temple Kids at Baptist Temple: Sunday School, Kids Church, Wednesday nights, and VBS for kids from birth through 6th grade.",
  page_hero("Temple Kids · Birth to 6th grade", "The best part of <em>their week.</em>",
-  "A place where your child can laugh and play, learn and grow, make friends, and most importantly, discover God's great love for them.", IMG["p_vbs"]) + f"""
+  "A place where your child can laugh and play, learn and grow, make friends, and most importantly, discover God's great love for them.", IMG["p_sum"].replace("format=1500w","format=2500w")) + f"""
 <section class="section">
   <div class="wrap">
     <div class="section-head reveal"><div><span class="eyebrow">Why parents love it</span><h2>Fun, safe, and <em>relational.</em></h2><p class="lede">Our goal is to make Sundays and Wednesdays the best days of your child's week, so they can meet Jesus on their level.</p></div></div>
