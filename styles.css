@@ -486,3 +486,11 @@ p{margin:0 0 1em;text-wrap:pretty}
   .m-row:hover{padding-left:0}
   .m-row::before{display:none}
 }
+
+/* Page hero with the photo on the right (keeps a speaker's face clear of the headline) */
+.page-hero.side .bg{left:38%;width:62%}
+.page-hero.side::before{background:linear-gradient(90deg,var(--night) 0%,var(--night) 38%,rgba(12,22,33,.55) 52%,rgba(12,22,33,.05) 78%)}
+@media (max-width:820px){
+  .page-hero.side .bg{left:0;width:100%}
+  .page-hero.side::before{background:linear-gradient(180deg,rgba(12,22,33,.55),rgba(12,22,33,.9))}
+}

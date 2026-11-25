@@ -188,8 +188,8 @@ def page(path, title, desc, body, current=None):
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     open(out, "w").write(apply_focus(doc))
 
-def page_hero(eyebrow, h1, lede, bg, pos="center"):
-    return f'''<section class="page-hero">
+def page_hero(eyebrow, h1, lede, bg, pos="center", side=False):
+    return f'''<section class="page-hero{" side" if side else ""}">
   <img class="bg" src="{bg}" alt="" style="object-position:{pos}">
   <div class="wrap">
     <span class="eyebrow">{eyebrow}</span>
@@ -508,7 +508,7 @@ page("/kids/", "Kids · Baptist Temple, Connersville",
 page("/students/", "Students · Baptist Temple, Connersville",
  "Student ministry for 7th through 12th grade at Baptist Temple: Wednesdays 6:30 to 8:30 PM.",
  page_hero("Students · 7th to 12th grade", "Christ-centered <em>difference makers.</em>",
-  "From the fun lessons to the crazy games, everything we do is about helping students follow Jesus and make a difference.", IMG["stu_hero"]) + f"""
+  "From the fun lessons to the crazy games, everything we do is about helping students follow Jesus and make a difference.", IMG["stu_hero"], side=True) + f"""
 <section class="facts-band">
   <div class="wrap">
     <div class="facts reveal">
